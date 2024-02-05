@@ -1,0 +1,4 @@
+name: hd-drupal-7
+recipe: drupal7
+config:
+  webroot: web
