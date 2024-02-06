@@ -42,7 +42,7 @@ services:
         - tree -d -L 3
 
         # Install opcache and enable mod-rewrite.
-        - docker-php-ext-install opcache
+        #- docker-php-ext-install opcache
         - a2enmod headers rewrite
 
         # Link the document root to the expected path. This example links
@@ -64,6 +64,8 @@ services:
       # already be present.
       update:
         - echo "===== Apache/PHP Update ====="
+
+        - drush site:install -y
 
         # Copy the files directory from an external server. The public
         # SSH key found in the Tugboat Repository configuration must be
