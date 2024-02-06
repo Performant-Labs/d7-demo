@@ -22,28 +22,15 @@ services:
         # Add the shell to the beginning of the file.
         - sed -i '1s/^/export SHELL=\/bin\/bash\n\n/' ~/.bashrc
 
+        # Add commands in vendor/bin to the PATH.
+        - echo "export PATH=$PATH:/var/lib/tugboat/vendor/bin" >> ~/.bashrc
+
         - |
-          cat > ~/uncomment_lines.sh <<EOF
-          #!/bin/bash
+          # Enable colored terminal and some aliases.
+          sed -e '11,15 s/#//' -i ~/.bashrc
+          sed -e '18,20 s/#//' -i ~/.bashrc
 
-          # Check if the correct number of arguments is provided
-          if [ "\$#" -ne 3 ]; then
-            echo "Usage: \$0 <filename> <start_line> <end_line>"
-            exit 1
-          fi
-
-          # Assign arguments to variables
-          filename="\$1"
-          start_line="\$2"
-          end_line="\$3"
-
-          # Uncomment lines within the specified range
-          sed -i "\${start_line},\${end_line}s/^#//" "\$filename"
-          EOF
-
-        - chmod +x ~/uncomment_lines.sh
-        - ~/uncomment_lines.sh ~/.bashrc 11 15
-        - ~/uncomment_lines.sh ~/.bashrc 18 20
+        - bash -c 'source ~/.bashrc'
         - apt-get update && apt-get -y install tree nano python3 python3-pip
         - mysql --help | grep "Default options" -A 1
         - tree -d -L 3
@@ -57,21 +44,13 @@ services:
         - ln -snf "${TUGBOAT_ROOT}/web" "${DOCROOT}"
 
         # Increase php memory limit to 256M.
-        #- echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/my-php.ini
+        - echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/my-php.ini
 
-        # enable display errors.
-        #- echo "display_errors = On" >> /usr/local/etc/php/conf.d/my-php.ini
-
-
-        # Enable colored terminal and some aliases.
-        #- sed -e '9,13 s/#//' -i ~/.bashrc
-        #- sed -e '16,19 s/#//' -i ~/.bashrc
+        # Enable display errors.
+        - echo "display_errors = On" >> /usr/local/etc/php/conf.d/my-php.ini
 
         # Use the tugboat-specific Drupal settings.
         #- cp "${TUGBOAT_ROOT}/.tugboat/settings.tugboat.php" "${DOCROOT}/sites/default/settings.local.php"
-
-        # Add commands in vendor/bin to the PATH.
-        #- echo "export PATH=$PATH:/var/lib/tugboat/vendor/bin" >> ~/.bashrc
 
         # Source the .bashrc file to apply changes immediately.
         #- source ~/.bashrc
