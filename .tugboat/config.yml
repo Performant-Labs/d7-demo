@@ -37,6 +37,9 @@ services:
         # enable display errors.
         - echo "display_errors = On" >> /usr/local/etc/php/conf.d/my-php.ini
 
+        # Add the shell to the beginning of the file.
+        - sed -i '1s/^/export SHELL=\/bin\/bash\n\n/' ~/.bashrc
+
         # Enable colored terminal and some aliases.
         - sed -e '9,13 s/#//' -i ~/.bashrc
         - sed -e '16,19 s/#//' -i ~/.bashrc
