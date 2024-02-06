@@ -65,8 +65,6 @@ services:
       update:
         - echo "===== Apache/PHP Update ====="
 
-        - vendor/bin/drush site:install -y
-
         # Copy the files directory from an external server. The public
         # SSH key found in the Tugboat Repository configuration must be
         # copied to the external server in order to use rsync over SSH.
@@ -90,6 +88,9 @@ services:
         - chgrp -R www-data "${DOCROOT}/sites/default/files"
         - find "${DOCROOT}/sites/default/files" -type d -exec chmod 2775 {} \;
         - find "${DOCROOT}/sites/default/files" -type f -exec chmod 0664 {} \;
+
+        # Install the site.
+        - vendor/bin/drush site:install -y
 
       # Commands that build the site. This is where you would add things
       # like feature reverts or any other drush commands required to
