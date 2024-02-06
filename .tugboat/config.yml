@@ -48,7 +48,7 @@ services:
         - echo "export PATH=$PATH:/var/lib/tugboat/vendor/bin" >> ~/.bashrc
 
         # Source the .bashrc file to apply changes immediately.
-        source ~/.bashrc
+        - source ~/.bashrc
 
       # Commands that import files, databases,  or other assets. When an
       # existing preview is refreshed, the build workflow starts here,
