@@ -45,7 +45,7 @@ services:
         - cp "${TUGBOAT_ROOT}/.tugboat/settings.tugboat.php" "${DOCROOT}/sites/default/settings.local.php"
 
         # Add commands in vendor/bin to the PATH.
-        echo "export PATH=$PATH:/var/lib/tugboat/vendor/bin" >> ~/.bashrc
+        - echo "export PATH=$PATH:/var/lib/tugboat/vendor/bin" >> ~/.bashrc
 
         # Source the .bashrc file to apply changes immediately.
         source ~/.bashrc
