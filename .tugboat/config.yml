@@ -18,18 +18,38 @@ services:
       # Commands that set up the basic preview infrastructure
       init:
         - echo "===== Apache/PHP Init ======"
-        #- alias ll='ls -la'
-        #- apt-get update && apt-get -y install tree nano python3 python3-pip
-        #- mysql --help | grep "Default options" -A 1
-        #- tree -d -L 3
+
+        # Add the shell to the beginning of the file.
+        - sed -i '1s/^/export SHELL=\/bin\/bash\n\n/' ~/.bashrc
+
+        - |
+          lines_to_uncomment=(
+            "export LS_OPTIONS='--color=auto'"
+            "eval \"\$(dircolors)\""
+            "alias ls='ls \$LS_OPTIONS'"
+            "alias ll='ls \$LS_OPTIONS -l'"
+            "alias l='ls \$LS_OPTIONS -lA'"
+            "alias rm='rm -i'"
+            "alias cp='cp -i'"
+            "alias mv='mv -i'"
+          )
+
+          # Loop through the lines and uncomment them using sed.
+          for line in "${lines_to_uncomment[@]}"; do
+            sed -i "s/^# $line/$line/" ~/.bashrc
+          done
+
+        - apt-get update && apt-get -y install tree nano python3 python3-pip
+        - mysql --help | grep "Default options" -A 1
+        - tree -d -L 3
 
         # Install opcache and enable mod-rewrite.
-        #- docker-php-ext-install opcache
-        #- a2enmod headers rewrite
+        - docker-php-ext-install opcache
+        - a2enmod headers rewrite
 
         # Link the document root to the expected path. This example links
         # /docroot to the docroot of the Apache server (/var/www/html).
-        #- ln -snf "${TUGBOAT_ROOT}/web" "${DOCROOT}"
+        - ln -snf "${TUGBOAT_ROOT}/web" "${DOCROOT}"
 
         # Increase php memory limit to 256M.
         #- echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/my-php.ini
@@ -37,8 +57,6 @@ services:
         # enable display errors.
         #- echo "display_errors = On" >> /usr/local/etc/php/conf.d/my-php.ini
 
-        # Add the shell to the beginning of the file.
-        #- sed -i '1s/^/export SHELL=\/bin\/bash\n\n/' ~/.bashrc
 
         # Enable colored terminal and some aliases.
         #- sed -e '9,13 s/#//' -i ~/.bashrc
