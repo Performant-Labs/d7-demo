@@ -65,7 +65,7 @@ services:
       update:
         - echo "===== Apache/PHP Update ====="
 
-        - drush site:install -y
+        - vendor/bin/drush site:install -y
 
         # Copy the files directory from an external server. The public
         # SSH key found in the Tugboat Repository configuration must be
