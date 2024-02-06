@@ -96,8 +96,8 @@ services:
       # and update steps, because the results of those are inherited
       # from the base preview.
       build:
-        - drush -r "${DOCROOT}" cache-clear all
-        - drush -r "${DOCROOT}" updb -y
+        - vendor/bin/drush -r "${DOCROOT}" cache-clear all
+        - vendor/bin/drush -r "${DOCROOT}" updb -y
 
   # What to call the service hosting MySQL. This name also acts as the
   # hostname to access the service by from the php service.
