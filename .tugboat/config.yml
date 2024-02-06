@@ -23,22 +23,27 @@ services:
         - sed -i '1s/^/export SHELL=\/bin\/bash\n\n/' ~/.bashrc
 
         - |
-          lines_to_uncomment=(
-            "export LS_OPTIONS='--color=auto'"
-            "eval \"\$(dircolors)\""
-            "alias ls='ls \$LS_OPTIONS'"
-            "alias ll='ls \$LS_OPTIONS -l'"
-            "alias l='ls \$LS_OPTIONS -lA'"
-            "alias rm='rm -i'"
-            "alias cp='cp -i'"
-            "alias mv='mv -i'"
-          )
+          cat > ~/uncomment_lines.sh <<EOF
+          #!/bin/bash
 
-          # Loop through the lines and uncomment them using sed.
-          for line in "${lines_to_uncomment[@]}"; do
-            sed -i "s/^# $line/$line/" ~/.bashrc
-          done
+          # Check if the correct number of arguments is provided
+          if [ "\$#" -ne 3 ]; then
+            echo "Usage: \$0 <filename> <start_line> <end_line>"
+            exit 1
+          fi
 
+          # Assign arguments to variables
+          filename="\$1"
+          start_line="\$2"
+          end_line="\$3"
+
+          # Uncomment lines within the specified range
+          sed -i "\${start_line},\${end_line}s/^#//" "\$filename"
+          EOF
+
+        - chmod +x ~/uncomment_lines.sh
+        - ~/uncomment_lines.sh ~/.bashrc 11 15
+        - ~/uncomment_lines.sh ~/.bashrc 18 20
         - apt-get update && apt-get -y install tree nano python3 python3-pip
         - mysql --help | grep "Default options" -A 1
         - tree -d -L 3
